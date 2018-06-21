@@ -1,74 +1,88 @@
 package serviceImpl;
 
 import domain.AccountBean;
+import domain.MinusAccountBean;
 import service.AccountService;
 import java.util.*;
+import java.text.SimpleDateFormat;
+
 
 public class AccountServiceImpl implements AccountService {
-	List<AccountBean> list;
+	Map<String, AccountBean> map;
 	
 	public AccountServiceImpl() {
-		list=new ArrayList<>();
+		map =new HashMap<>();
 	}
 	
 	@Override
 	public void createAccount(AccountBean ac) {
-		ac.setAccountNo(createAccountNo()); //set을 넣어야해
+		ac.setAccountNo(createAccountNo());
 		ac.setAccountType(ac.getAccountType());
-		ac.setCreateDate(ac.getCreateDate());
+		ac.setCreateDate(createDate());
 		ac.setMoney(ac.getMoney());
-		list.add(ac);
-		
+		map.put(ac.getUid(),ac);
 	}
+
+	private String createDate() {
+		return new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분 ss초").format(new Date());
+	}
+
 	private String createAccountNo() {
-		return String.format("%s - %s - %s",createRandom(0,999),createRandom(0,999),createRandom(0,999));
+		return String.format("%s-%s-%s", createRandomNo(),createRandomNo(),createRandomNo());
 	}
-	private String createRandom(int start,int end) {
-		return String.format("%03d",(int)(Math.random()*end)+start);
-	}
-	
-	@Override
-	public List<AccountBean> list() {
-		return list;
+
+	private String createRandomNo() {
+		return String.format("%03d",(int)(Math.random()*1000));
 	}
 
 	@Override
-	public List<AccountBean> FindByName(String param) {  ///★★★★
+	public void createMinusAccount(MinusAccountBean minusAc) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public Map<String, AccountBean> list() {
+		return map;
+	}
+
+	@Override
+	public List<AccountBean> findByName(String name) {
 		List<AccountBean> temp = new ArrayList<>();
-		for(int i=0; i<list.size();i++) {
-			if(param.equals(list.get(i).getName())) {
-				temp.add(list.get(i));///★★★★
+		Set<AccountBean> set = new HashSet<>();
+		for(Map.Entry<String, AccountBean> e : map.entrySet()) {
+			if(name.equals(e.getValue().getName())) {
+				set.add(e.getValue());
 			}
 		}
-		return temp;    //★★★★
+		Iterator<AccountBean> it = set.iterator();
+		while(it.hasNext()){
+			temp.add(it.next());
+		}
+		
+		return temp;
 	}
 
 	@Override
-	public AccountBean search(AccountBean ac) {
-		AccountBean arr = new AccountBean();
-		for(int i=0; i<list.size();i++) {
-			if(ac.getUid().equals(list.get(i).getUid())) {
-				arr = list.get(i);
-				break;
-			}
-		}
-		return arr;
+	public AccountBean findById(AccountBean ac) {
+		return map.get(ac.getUid());
 	}
 
 	@Override
 	public void updatePw(AccountBean ac) {
-		list.get(list.indexOf(search(ac))).setPw(ac.getPw()); //★★★★
+		String oldpw= ac.getPw().split("/")[0];
+		String newpw= ac.getPw().split("/")[1];
+		if(oldpw.equals(map.get(ac.getUid()).getPw())) {
+			map.get(ac.getUid()).setPw(newpw);
+		}
 	}
 
 	@Override
-	public void deleteMember(AccountBean ac) {
-		//list.remove(list.get(list.indexOf(search(ac))));  //★★★★
-		list.remove(list.indexOf(search(ac)));
+	public void deleteAccount(AccountBean ac) {
+		String pw= ac.getPw().split("/")[0];
+		String confirmPw= ac.getPw().split("/")[1];
+		if(pw.equals(confirmPw)) {
+			map.remove(ac.getUid());
+		}
 	}
-
-
-
-
-
-
+	
 }

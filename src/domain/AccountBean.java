@@ -70,8 +70,15 @@ public class AccountBean {
 		return withdraw;
 	}
 	public String toString() {
-		return String.format("----------------------------- \n %s \n %s \n 계좌번호 : %s \n 이름 : %s \n 생성일 : %s \n 잔액 : %d \n ----------------------------- \n", BANK_NAME, ACCOUNT_TYPE,
-				getAccountNo(), getName(), getCreateDate(), getMoney());
+		return String.format("----------------------------- \n"
+				+ " %s \n "
+				+ "%s \n "
+				+ "계좌번호 : %s \n "
+				+ "이름 : %s \n "
+				+ "생성일 : %s \n "
+				+ "잔액 : %d \n "
+				+ "----------------------------- \n",
+				BANK_NAME, ACCOUNT_TYPE,getAccountNo(), getName(), getCreateDate(), getMoney());
 	}
 
 }

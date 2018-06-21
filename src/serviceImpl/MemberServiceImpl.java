@@ -1,82 +1,83 @@
 package serviceImpl;
-
-import java.util.List;
-import java.util.ArrayList;
-import domain.MemberBean;
-import domain.StaffBean;
-import domain.UserBean;
+//Map
+import java.util.*;
+import domain.*;
 import service.MemberService;
 	
 public class MemberServiceImpl implements MemberService {
-	List<MemberBean> list;
-	
+	Map<String,MemberBean> map; //
+	int count;
 	public MemberServiceImpl() {
-		list = new ArrayList<>(); //뒤쪽 생략가능
+		map = new HashMap<>();
+		count = 0;
 	}
 	@Override
 	public void createUser(UserBean user) {
 		user.setCreditRating("7등급");
-		//배열일때 할당연산자(=) 넣었음. list[count]=user; 좋지않음
-		
-							//String res = "";
-							//boolean flag = ;
-							/*if(list.add(user)) {
-								res="등록성공";
-							}else {
-								res="등록실패";
-							}*/
-
-		System.out.println("실행결과: "
-		+ ((list.add(user)) ? "등록성공" : "등록실패"));
+		map.put(user.getUid(),user);
 	}
 
 	@Override
 	public void createStaff(StaffBean staff) {
 		staff.setAccessNum("1234");
-		System.out.println("실행결과: "
-		+ ((list.add(staff)) ? "등록성공" : "등록실패"));
-		
+		map.put(staff.getUid(),staff);
 	}
 
 	@Override
-	public List<MemberBean> list() {
-		return list;
+	public Map<String,MemberBean> list() {
+		return map;
 	}
 
 	@Override
-	public List<MemberBean> search(String param) {
-		List<MemberBean> temp = new ArrayList<>();  //뒤에 동일한 <>값은 생략가능
-	
-		for(int i=0;i<list.size();i++) {  //size() =>데이터양에 따라 칸이 증식=> 최적의 횟수만 돈다.
-			if(param.equals(list.get(i).getName())) {   //list[i]  =list.get(i)   
-				temp.add(list.get(i));
+	public List<MemberBean> findByName(String name) { 
+		List<MemberBean> temp = new ArrayList<>();
+		Set<MemberBean> set = new HashSet<>(); 
+		for (Map.Entry<String, MemberBean> e : map.entrySet()) {
+			if(name.equals(e.getValue().getName())) {
+				set.add(e.getValue());
 			}
+		}
+		Iterator<MemberBean> it = set.iterator();
+		while (it.hasNext()) {
+			temp.add(it.next());
 		}
 		return temp;
 	}
 
+		/*for(int i=0;i<map.size();i++) {  //size() =>데이터양에 따라 칸이 증식=> 최적의 횟수만 돈다.
+					if(param.equals(map.get(i).getName())) {   //list[i]  =list.get(i)   
+						temp.add(map.get(i));
+					}
+				}*/
+	
+
 	@Override
-	public MemberBean search(MemberBean member) {
-	MemberBean dap = new MemberBean();
-		
-		for(int i=0;i<list.size();i++) {  //size() =>데이터양에 따라 칸이 증식=> 최적의 횟수만 돈다.
-			if(member.getUid().equals(list.get(i).getUid())) {   //list[i]  =list.get(i)   
-				dap = list.get(i);
-				break;
+	public MemberBean findById(MemberBean member) {
+	System.out.println("찾는 아이디에 해당하는 이름 : "+map.get(member.getUid()));
+		return map.get(member.getUid());  //
+	}
+
+	@Override
+	public void updatePassword(MemberBean member) {  
+		String id = member.getUid();
+		String oldPass = member.getPw().split("/")[0];
+		String newPass = member.getPw().split("/")[1];
+		MemberBean mem = map.get(member.getUid());
+		if(mem == null) {
+			System.out.println("수정하려는 ID가 없음!");
+		}else {
+			if(oldPass.equals(mem.getPw())) {
+				mem.setPw(newPass);
+				map.put(id, mem);
 			}
 		}
-		return dap;
 	}
-
 	@Override
-	public void update(MemberBean member) {  
-		list.get(list.indexOf(search(member))).setPw(member.getPw());  //★★★★
+	public void deleteMember(MemberBean member) {
+		map.remove(member.getUid());
 	}
-
 	@Override
-	public void delete(MemberBean member) {
-		list.remove(list.indexOf(search(member)));
-		//list.remove(search(member));
-		//search(member) 로 써야돼?? member 쓰면 안돼?
+	public int count() {
+		return count;
 	}
 }

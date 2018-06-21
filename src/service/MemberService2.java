@@ -1,0 +1,19 @@
+package service;
+
+import java.util.List;
+import domain.*;
+
+public interface MemberService2 {
+
+	public void createUser(UserBean user);
+	public void createStaff(StaffBean staff);
+	public List<MemberBean> list();
+	public List<MemberBean> search(String param); //searchSome
+	public MemberBean search(MemberBean member); //searchOne
+	public void update(MemberBean member);
+	public void delete(MemberBean member);
+		
+	
+	
+	
+}

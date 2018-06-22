@@ -62,8 +62,7 @@ public class MemberBean {
 
 	@Override
 	public String toString() {
-		return "******직원정보****** \n"
-				+ " [아이디:" + uid+ ", \n "
+		return " [아이디:" + uid+ ", \n "
 				+ "비번: " + pw+ ", \n"
 				+ "이름:  " + name 
 				+ ", \n 주민번호: " + ssn 

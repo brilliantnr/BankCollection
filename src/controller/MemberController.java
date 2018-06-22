@@ -17,126 +17,39 @@ enum MemberButt {
 };
 
 public class MemberController {
-	
-	public void createUser() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		member = new UserBean();
-		member.setUid(JOptionPane.showInputDialog("ID"));
-		member.setPw(JOptionPane.showInputDialog("비번")); 
-		member.setName(JOptionPane.showInputDialog("이름"));
-		member.setSsn(JOptionPane.showInputDialog("주민번호"));
-		member.setPhone(JOptionPane.showInputDialog("전화번호"));
-		member.setEmail(JOptionPane.showInputDialog("이메일"));
-		member.setAddr(JOptionPane.showInputDialog("주소"));
+	private static MemberController instance = new MemberController();  //★
+	public static MemberController getInstance() {return instance;}  
+	//MemberService service;
+	private MemberController() {
+		//service = new MemberServiceImpl();  //서비스임플 객체 만들어지면서 impl생성자 작동해서 dao 도 생성됨
 	}
-	public void createStaff() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		member = new StaffBean();
-		member.setUid(JOptionPane.showInputDialog("ID"));
-		member.setPw(JOptionPane.showInputDialog("비번")); 
-		member.setName(JOptionPane.showInputDialog("이름"));
-		member.setSsn(JOptionPane.showInputDialog("주민번호"));
-		member.setPhone(JOptionPane.showInputDialog("전화번호"));
-		member.setEmail(JOptionPane.showInputDialog("이메일"));
-		member.setAddr(JOptionPane.showInputDialog("주소"));
+
+	public void createUser(UserBean member) {
+		System.out.println("====멤버 컨트롤러 ====");
+		System.out.println("화면에서 넘어온 객체 :"+member);
+		//service.createUser(member);  //컨트롤러에선 캐스팅X, service에서 알아서 연산해야함
+		MemberServiceImpl.getInstance().createUser(member);  //Singleton Pattern 사용
 	}
-	public void list() {
+
+	public void updatePassword() {
 		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		JOptionPane.showMessageDialog(null, service.list());
-	}
-	public void count() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		JOptionPane.showMessageDialog(null, service.count());
-	}
-	public void findById() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		member = new MemberBean();
-		member.setUid(JOptionPane.showInputDialog("ID 입력"));
-		member.setPw(JOptionPane.showInputDialog("비밀번호 입력"));
-		JOptionPane.showMessageDialog(null, service.findById(member));
-	}
-	public void findByName() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-		JOptionPane.showMessageDialog(null, service.findByName(JOptionPane.showInputDialog("이름 입력")));
-	}
-	public void update() {
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
 		member = new MemberBean();
 		member.setUid(JOptionPane.showInputDialog("ID 입력"));
 		member.setPw(JOptionPane.showInputDialog("비밀번호 입력") 
 				+ "/" + 
 				JOptionPane.showInputDialog("새로운 비밀번호 입력"));
-		service.updatePassword(member);
+		//service.updatePassword(member);
 	}
-	public void delete() {
+	
+	public void deleteMember() {
 		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
 		member = new MemberBean();
 		member.setUid(JOptionPane.showInputDialog("ID 입력"));
 		member.setPw(JOptionPane.showInputDialog("비밀번호 입력")
 				+ "/" + 
 				JOptionPane.showInputDialog("비밀번호 재확인"));
-		 service.deleteMember(member);
+		 //service.deleteMember(member);
 	}
-	
-	
-	
-	
-	
-	
-	public static void main(String[] args) {
-		MemberButt[] buttons = { MemberButt.EXIT, 
-				MemberButt.JOIN, MemberButt.ADD_STAFF_ONLY, 
-				MemberButt.LIST,MemberButt.COUNT, MemberButt.FIND_BY_ID, MemberButt.FIND_BY_NAME, 
-				MemberButt.UPDATE,
-				MemberButt.WITHDRAWAL };
-
-		MemberBean member = null;
-		MemberService service = new MemberServiceImpl();
-
-		while (true) {
-			MemberButt select = (MemberButt) JOptionPane.showInputDialog(null, "MAIN PAGE", "SELECT MENU",
-					JOptionPane.QUESTION_MESSAGE, null, buttons, null);
-			switch (select) {
-			case EXIT:
-				return;
-			case JOIN:
-				break;
-			case ADD_STAFF_ONLY:
-				break;
-			case LIST:
-				break;
-			case COUNT:
-				break;
-			case FIND_BY_ID:
-				break;
-			case FIND_BY_NAME:
-				break;
-			case UPDATE:
-				break;
-			case WITHDRAWAL:
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }
